@@ -16,7 +16,7 @@
 
 ## 第二步：
 
-下载本项目的[secCompre.bat](https://github.com/smdxh/secCompre/blob/main/secCompre.bat)文件,以管理员权限运行bat文件。
+下载本项目的[secCompre.bat](https://github.com/smdxh/secCompre/raw/refs/heads/main/secCompre.bat)文件,以管理员权限运行bat文件。
 
 ## 第三步：
 
