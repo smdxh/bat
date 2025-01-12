@@ -33,27 +33,49 @@ if "%1"=="" (
         "%temp%\getadmin.vbs" 
         exit /B 
     :as_admin
-        :: 7z选择对话框
-        set diaParam="& {Add-Type -AssemblyName System.Windows.Forms;$FileDialog = New-Object System.Windows.Forms.OpenFileDialog;$FileDialog.Filter = '7z.exe|7z.exe';$FileDialog.InitialDirectory = '$env:ProgramFiles\7-Zip';if ($FileDialog.ShowDialog() -eq 'OK') {$FileDialog.FileName}}"
+        :menu
+        echo 请选择操作：
+        echo 1. 安装"%myName%"
+        echo 2. 卸载"%myName%"
+        set /p choice=请输入数字（1或2）：
 
-        :: 使用PowerShell弹出文件选择器对话框，确定7zip路径
-        for /f "delims=" %%i in ('powershell -command %diaParam%') do set "selectedFile=%%i"
-        :: 输出选择的文件路径
-        if defined selectedFile (
-            set "Z_PATH=%selectedFile%"
-            setx 7Z_PATH "!Z_PATH!"
-        )
-        :: 注入文件夹右键菜单
-        reg add "HKCR\Directory\shell\secCompre" /ve /d "%myName%" /f
-        reg add "HKCR\Directory\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
-        :: 注入文件右键菜单
-        reg add "HKCR\*\shell\secCompre" /ve /d "%myName%" /f
-        reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
-        :: 删除之前版本的secCompre右键菜单
-        echo 删除旧secCompre注册表，删除失败可忽略
-        reg delete "HKCR\Folder\shell\secCompre" /f
-        pause
-        exit /B 
+        if "%choice%"=="1" goto install
+        if "%choice%"=="2" goto uninstall
+
+        echo 输入无效，请重新输入。
+        goto menu
+
+        :install
+            :: 进入安装流程
+            :: 7z选择对话框
+            set diaParam="& {Add-Type -AssemblyName System.Windows.Forms;$FileDialog = New-Object System.Windows.Forms.OpenFileDialog;$FileDialog.Filter = '7z.exe|7z.exe';$FileDialog.InitialDirectory = '$env:ProgramFiles\7-Zip';if ($FileDialog.ShowDialog() -eq 'OK') {$FileDialog.FileName}}"
+
+            :: 使用PowerShell弹出文件选择器对话框，确定7zip路径
+            for /f "delims=" %%i in ('powershell -command %diaParam%') do set "selectedFile=%%i"
+            :: 输出选择的文件路径
+            if defined selectedFile (
+                set "Z_PATH=%selectedFile%"
+                setx 7Z_PATH "!Z_PATH!"
+            )
+            :: 注入文件夹右键菜单
+            reg add "HKCR\Directory\shell\secCompre" /ve /d "%myName%" /f
+            reg add "HKCR\Directory\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
+            :: 注入文件右键菜单
+            reg add "HKCR\*\shell\secCompre" /ve /d "%myName%" /f
+            reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
+            :: 删除之前版本的secCompre右键菜单
+            echo 删除旧secCompre注册表，删除失败可忽略
+            reg delete "HKCR\Folder\shell\secCompre" /f
+            pause
+            exit /B 
+
+        :uninstall
+            reg delete "HKCR\Directory\shell\secCompre" /f
+            reg delete "HKCR\*\shell\secCompre" /f
+            reg delete "HKCU\Environment" /v 7Z_PATH /f
+            pause
+            exit /B 
+
 ) else (
 :: 如果是右键文件或者文件夹则执行此部分代码
     :: 显示提示信息
@@ -84,5 +106,4 @@ if "%1"=="" (
             "!7Z_PATH!" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y
         )
     )
-    pause
 )
