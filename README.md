@@ -12,7 +12,7 @@
 
 ## 第一步：
 
-安装7z：https://www.7-zip.org/download.html。
+安装7z：[官网下载7-Zip](https://www.7-zip.org/)
 
 ## 第二步：
 
