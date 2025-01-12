@@ -48,9 +48,9 @@ if "%1"=="" (
         set diaParam="& {Add-Type -AssemblyName System.Windows.Forms;$FileDialog = New-Object System.Windows.Forms.OpenFileDialog;$FileDialog.Filter = '7z.exe|7z.exe';$FileDialog.InitialDirectory = '$env:ProgramFiles\7-Zip';if ($FileDialog.ShowDialog() -eq 'OK') {$FileDialog.FileName}}"
         :: 使用PowerShell弹出文件选择器对话框，确定7zip路径
         for /f "delims=" %%i in ('powershell -command %diaParam%') do set "selectedFile=%%i"
-        echo 保存7z安装路径...
         if defined selectedFile (
             set "Z_PATH=%selectedFile%"
+            echo 保存7z环境变量...
             setx 7Z_PATH "!Z_PATH!"
         )
         echo 注入文件夹右键菜单...
