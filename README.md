@@ -12,7 +12,7 @@
 
 ### 第一步：
 
-下载本项目的[secCompre.zip](https://github.com/smdxh/secCompre/releases/download/secCompre/secCompre.zip)文件,以管理员权限运行bat文件。
+下载本项目的[secCompre.zip](https://github.com/smdxh/secCompre/releases/download/secCompre/secCompre.zip)文件并解压,以管理员权限运行bat文件。
 
 ### 第二步：
 
