@@ -62,7 +62,7 @@ if "%1"=="" (
         echo 删除旧secCompre注册表，可忽略下一条“系统找不到指定的注册表项或值”...
         reg delete "HKCR\Folder\shell\secCompre" /f
         pause
-        exit /B 
+        exit
 
     :uninstall
         echo 删除文件夹右键菜单...
@@ -72,7 +72,7 @@ if "%1"=="" (
         echo 删除7z环境变量...
         reg delete "HKCU\Environment" /v 7Z_PATH /f
         pause
-        exit /B 
+        exit
 
 ) else (
 :: 如果是右键文件或者文件夹则执行此部分代码
