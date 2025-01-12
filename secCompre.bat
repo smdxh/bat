@@ -76,12 +76,11 @@ if "%1"=="" (
 
 ) else (
 :: 如果是右键文件或者文件夹则执行此部分代码
-    :: 显示提示信息
     echo 正在运行 %myName%...
     :: 获取被压缩对象的路径
     set comPath=%*
     echo "当前压缩的对象为!comPath!"
-    ::使用 7z.exe 第一次压缩文件夹
+    ::使用 7z.exe 第一次压缩文件或文件夹
     "!7Z_PATH!" a "!comPath!.7z.7z" "!comPath!" -p!pw1! -mx0 -y
     :: 获得压缩文件大小
     set fileSize=0
@@ -90,13 +89,13 @@ if "%1"=="" (
     )
     set /a fileSize=!fileSize!/1048576
     echo 文件大小: !fileSize! MB
-    ::使用 7z.exe 根据文件大小第二次压缩文件夹
+    ::使用 7z.exe 根据文件大小第二次压缩文件
     if !fileSize! lss %minSize% (
         echo 当前文件小于%minSize%MB，不执行分卷
         "!7Z_PATH!" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -y
     ) else (
         if !fileSize! lss %maxSize% (
-            echo 当前文件大于%minSize%MB，将分为2份
+            echo 当前文件大于%minSize%MB，将分为2卷
             set /a result=!fileSize!/2 + 1
             "!7Z_PATH!" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v!result!m -y
         ) else (
