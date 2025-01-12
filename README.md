@@ -16,7 +16,7 @@
 
 ## 第二步：
 
-下载本项目的[secCompre.bat](https://github.com/smdxh/secCompre/archive/refs/tags/7-zip.zip)文件,以管理员权限运行bat文件。
+下载本项目的[secCompre.zip](https://github.com/smdxh/secCompre/releases/download/secCompre/secCompre.zip)文件,以管理员权限运行bat文件。
 
 ## 第三步：
 
