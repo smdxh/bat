@@ -10,24 +10,23 @@ set "pw2=acg18"
 set minSize=200
 :: 设置最大分卷（MB），高于这个数值均以此大小分卷
 set maxSize=2000
-
 :: 启用延迟变量扩展
 setlocal enabledelayedexpansion
 if "%1"=="" (
-    :: 如果是双击（右键管理员身份运行）则执行此部分代码
-    echo 正在注入右键菜单...
+    :: 如果是双击或者右键以管理员身份运行，则执行此部分代码
+    echo 欢迎使用"%myName%"安装、卸载程序
     :: 获取当前批处理文件的完整路径
     set "batchPath=%~f0"
     :: 获取当前批处理文件所在的目录
     set "batchDir=%~dp0"
-    :: 检查是否以管理员身份运行
+    echo 检查是否以管理员身份运行...
     net.exe session 1>NUL 2>NUL && (
         goto as_admin
     ) || (
         goto not_admin
     )
     :not_admin
-        echo 请求管理员权限
+        echo 请求管理员权限...
         echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs" 
         echo UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs" 
         "%temp%\getadmin.vbs" 
@@ -37,44 +36,43 @@ if "%1"=="" (
         echo 请选择操作：
         echo 1. 安装"%myName%"
         echo 2. 卸载"%myName%"
-        set /p choice=请输入数字（1或2）：
-
+        set /p choice=请输入数字（1或2）按回车：
         if "%choice%"=="1" goto install
         if "%choice%"=="2" goto uninstall
-
         echo 输入无效，请重新输入。
         goto menu
 
-        :install
-            :: 进入安装流程
-            :: 7z选择对话框
-            set diaParam="& {Add-Type -AssemblyName System.Windows.Forms;$FileDialog = New-Object System.Windows.Forms.OpenFileDialog;$FileDialog.Filter = '7z.exe|7z.exe';$FileDialog.InitialDirectory = '$env:ProgramFiles\7-Zip';if ($FileDialog.ShowDialog() -eq 'OK') {$FileDialog.FileName}}"
+    :install
+        echo 进入安装程序
+        echo 请选择7z安装路径...
+        set diaParam="& {Add-Type -AssemblyName System.Windows.Forms;$FileDialog = New-Object System.Windows.Forms.OpenFileDialog;$FileDialog.Filter = '7z.exe|7z.exe';$FileDialog.InitialDirectory = '$env:ProgramFiles\7-Zip';if ($FileDialog.ShowDialog() -eq 'OK') {$FileDialog.FileName}}"
+        :: 使用PowerShell弹出文件选择器对话框，确定7zip路径
+        for /f "delims=" %%i in ('powershell -command %diaParam%') do set "selectedFile=%%i"
+        echo 保存7z安装路径...
+        if defined selectedFile (
+            set "Z_PATH=%selectedFile%"
+            setx 7Z_PATH "!Z_PATH!"
+        )
+        echo 注入文件夹右键菜单...
+        reg add "HKCR\Directory\shell\secCompre" /ve /d "%myName%" /f
+        reg add "HKCR\Directory\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
+        echo 注入文件右键菜单...
+        reg add "HKCR\*\shell\secCompre" /ve /d "%myName%" /f
+        reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
+        echo 删除旧secCompre注册表，可忽略下一条“系统找不到指定的注册表项或值”...
+        reg delete "HKCR\Folder\shell\secCompre" /f
+        pause
+        exit /B 
 
-            :: 使用PowerShell弹出文件选择器对话框，确定7zip路径
-            for /f "delims=" %%i in ('powershell -command %diaParam%') do set "selectedFile=%%i"
-            :: 输出选择的文件路径
-            if defined selectedFile (
-                set "Z_PATH=%selectedFile%"
-                setx 7Z_PATH "!Z_PATH!"
-            )
-            :: 注入文件夹右键菜单
-            reg add "HKCR\Directory\shell\secCompre" /ve /d "%myName%" /f
-            reg add "HKCR\Directory\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
-            :: 注入文件右键菜单
-            reg add "HKCR\*\shell\secCompre" /ve /d "%myName%" /f
-            reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
-            :: 删除之前版本的secCompre右键菜单
-            echo 删除旧secCompre注册表，可忽略“系统找不到指定的注册表项或值”
-            reg delete "HKCR\Folder\shell\secCompre" /f
-            pause
-            exit /B 
-
-        :uninstall
-            reg delete "HKCR\Directory\shell\secCompre" /f
-            reg delete "HKCR\*\shell\secCompre" /f
-            reg delete "HKCU\Environment" /v 7Z_PATH /f
-            pause
-            exit /B 
+    :uninstall
+        echo 删除文件夹右键菜单...
+        reg delete "HKCR\Directory\shell\secCompre" /f
+        echo 删除文件右键菜单...
+        reg delete "HKCR\*\shell\secCompre" /f
+        echo 删除7z环境变量...
+        reg delete "HKCU\Environment" /v 7Z_PATH /f
+        pause
+        exit /B 
 
 ) else (
 :: 如果是右键文件或者文件夹则执行此部分代码
