@@ -1,109 +1,99 @@
 @echo off
-:: ¶ÔÎÄ¼ş½øĞĞÁ½²ãÑ¹Ëõ
-:: ÓÒ¼üÎÄ¼ş»òÕßÎÄ¼ş¼ĞÏÔÊ¾µÄÃû³Æ£¬²»Òª¼Ó¿Õ¸ñ
-set myName=¶şÖØÑ¹Ëõ
-:: ÄÚ²ãÃÜÂë£¬²»Òª¼Ó¿Õ¸ñ
+:: å¯¹æ–‡ä»¶è¿›è¡Œä¸¤å±‚å‹ç¼©
+:: å³é”®æ–‡ä»¶æˆ–è€…æ–‡ä»¶å¤¹æ˜¾ç¤ºçš„åç§°ï¼Œä¸è¦åŠ ç©ºæ ¼
+set myName=äºŒé‡å‹ç¼©
+:: å†…å±‚å¯†ç ï¼Œä¸è¦åŠ ç©ºæ ¼
 set pw1=smdxh
-:: Íâ²ãÃÜÂë£¬²»Òª¼Ó¿Õ¸ñ
+:: å¤–å±‚å¯†ç ï¼Œä¸è¦åŠ ç©ºæ ¼
 set pw2=smdxh
-:: ÉèÖÃ×îĞ¡·Ö¾í£¨MB£©£¬µÍÓÚÕâ¸öÊıÖµ²»·Ö¾í£¬¸ßÓÚÕâ¸öÖµÔò·ÖÎª2¸öÑ¹Ëõ°ü¡£
+:: è®¾ç½®æœ€å°åˆ†å·ï¼ˆMBï¼‰ï¼Œä½äºè¿™ä¸ªæ•°å€¼ä¸åˆ†å·ï¼Œé«˜äºè¿™ä¸ªå€¼åˆ™åˆ†ä¸º2ä¸ªå‹ç¼©åŒ…ã€‚
 set minSize=200
-:: ÉèÖÃ×î´ó·Ö¾í£¨MB£©£¬¸ßÓÚÕâ¸öÊıÖµ¾ùÒÔ´Ë´óĞ¡·Ö¾í
+:: è®¾ç½®æœ€å¤§åˆ†å·ï¼ˆMBï¼‰ï¼Œé«˜äºè¿™ä¸ªæ•°å€¼å‡ä»¥æ­¤å¤§å°åˆ†å·
 set maxSize=2000
-:: ÆôÓÃÑÓ³Ù±äÁ¿À©Õ¹
+:: å¯ç”¨å»¶è¿Ÿå˜é‡æ‰©å±•
 setlocal enabledelayedexpansion
+set "Z_PATH=%~dp0\7z.exe"
 if "%1"=="" (
-    :: Èç¹ûÊÇË«»÷»òÕßÓÒ¼üÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ£¬ÔòÖ´ĞĞ´Ë²¿·Ö´úÂë
-    echo »¶Ó­Ê¹ÓÃ"%myName%"°²×°¡¢Ğ¶ÔØ³ÌĞò
-    :: »ñÈ¡µ±Ç°Åú´¦ÀíÎÄ¼şµÄÍêÕûÂ·¾¶
+    :: å¦‚æœæ˜¯åŒå‡»æˆ–è€…å³é”®ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼Œåˆ™æ‰§è¡Œæ­¤éƒ¨åˆ†ä»£ç 
+    echo æ¬¢è¿ä½¿ç”¨"%myName%"å®‰è£…ã€å¸è½½ç¨‹åº
+    :: è·å–å½“å‰æ‰¹å¤„ç†æ–‡ä»¶çš„å®Œæ•´è·¯å¾„
     set "batchPath=%~f0"
-    :: »ñÈ¡µ±Ç°Åú´¦ÀíÎÄ¼şËùÔÚµÄÄ¿Â¼
+    :: è·å–å½“å‰æ‰¹å¤„ç†æ–‡ä»¶æ‰€åœ¨çš„ç›®å½•
     set "batchDir=%~dp0"
-    echo ¼ì²éÊÇ·ñÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ...
+    echo æ£€æŸ¥æ˜¯å¦ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ...
     net.exe session 1>NUL 2>NUL && (
         goto as_admin
     ) || (
         goto not_admin
     )
     :not_admin
-        echo ÇëÇó¹ÜÀíÔ±È¨ÏŞ...
+        echo è¯·æ±‚ç®¡ç†å‘˜æƒé™...
         echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs" 
         echo UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs" 
         "%temp%\getadmin.vbs" 
         exit /B 
     :as_admin
         :menu
-        echo ÇëÑ¡Ôñ²Ù×÷£º
-        echo 1. °²×°"%myName%"
-        echo 2. Ğ¶ÔØ"%myName%"
-        set /p choice=ÇëÊäÈëÊı×Ö£¨1»ò2£©°´»Ø³µ£º
+        echo è¯·é€‰æ‹©æ“ä½œï¼š
+        echo 1. å®‰è£…"%myName%"
+        echo 2. å¸è½½"%myName%"
+        set /p choice=è¯·è¾“å…¥æ•°å­—ï¼ˆ1æˆ–2ï¼‰æŒ‰å›è½¦ï¼š
         if "%choice%"=="1" goto install
         if "%choice%"=="2" goto uninstall
-        echo ÊäÈëÎŞĞ§£¬ÇëÖØĞÂÊäÈë¡£
+        echo è¾“å…¥æ— æ•ˆï¼Œè¯·é‡æ–°è¾“å…¥ã€‚
         goto menu
 
     :install
-        echo ½øÈë°²×°³ÌĞò
-        echo ÇëÑ¡Ôñ7z°²×°Â·¾¶...
-        set diaParam="& {Add-Type -AssemblyName System.Windows.Forms;$FileDialog = New-Object System.Windows.Forms.OpenFileDialog;$FileDialog.Filter = '7z.exe|7z.exe';$FileDialog.InitialDirectory = '$env:ProgramFiles\7-Zip';if ($FileDialog.ShowDialog() -eq 'OK') {$FileDialog.FileName}}"
-        :: Ê¹ÓÃPowerShellµ¯³öÎÄ¼şÑ¡ÔñÆ÷¶Ô»°¿ò£¬È·¶¨7zipÂ·¾¶
-        for /f "delims=" %%i in ('powershell -command %diaParam%') do set "selectedFile=%%i"
-        if defined selectedFile (
-            set "Z_PATH=%selectedFile%"
-            echo ±£´æ7z»·¾³±äÁ¿...
-            setx 7Z_PATH "!Z_PATH!"
-        )
-        echo ×¢ÈëÎÄ¼ş¼ĞÓÒ¼ü²Ëµ¥...
+        echo è¿›å…¥å®‰è£…ç¨‹åº
+        echo æ³¨å…¥æ–‡ä»¶å¤¹å³é”®èœå•...
         reg add "HKCR\Directory\shell\secCompre" /ve /d "%myName%" /f
         reg add "HKCR\Directory\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
-        echo ×¢ÈëÎÄ¼şÓÒ¼ü²Ëµ¥...
+        echo æ³¨å…¥æ–‡ä»¶å³é”®èœå•...
         reg add "HKCR\*\shell\secCompre" /ve /d "%myName%" /f
         reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
-        echo É¾³ı¾ÉsecCompre×¢²á±í£¬¿ÉºöÂÔÏÂÒ»Ìõ¡°ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄ×¢²á±íÏî»òÖµ¡±...
+        echo åˆ é™¤æ—§secCompreæ³¨å†Œè¡¨ï¼Œå¯å¿½ç•¥ä¸‹ä¸€æ¡â€œç³»ç»Ÿæ‰¾ä¸åˆ°æŒ‡å®šçš„æ³¨å†Œè¡¨é¡¹æˆ–å€¼â€...
         reg delete "HKCR\Folder\shell\secCompre" /f
-        echo Ñ¹Ëõ°üÄÚ²ãÃÜÂëÊÇ¡°%pw1%¡±
-        echo Ñ¹Ëõ°üÍâ²ãÃÜÂëÊÇ¡°%pw2%¡±
-        echo ĞèÒªĞŞ¸ÄÃÜÂëÇëÓÒ¼üµ¥»÷±¾½Å±¾£¬Ñ¡Ôñ¡°±à¼­¡±£¬ĞŞ¸Ä¶ÔÓ¦Î»ÖÃµÈºÅºóÃæµÄÖµ
+        echo å‹ç¼©åŒ…å†…å±‚å¯†ç æ˜¯â€œ%pw1%â€
+        echo å‹ç¼©åŒ…å¤–å±‚å¯†ç æ˜¯â€œ%pw2%â€
+        echo éœ€è¦ä¿®æ”¹å¯†ç è¯·å³é”®å•å‡»æœ¬è„šæœ¬ï¼Œé€‰æ‹©â€œç¼–è¾‘â€ï¼Œä¿®æ”¹å¯¹åº”ä½ç½®ç­‰å·åé¢çš„å€¼
         pause
         exit
 
     :uninstall
-        echo É¾³ıÎÄ¼ş¼ĞÓÒ¼ü²Ëµ¥...
+        echo åˆ é™¤æ–‡ä»¶å¤¹å³é”®èœå•...
         reg delete "HKCR\Directory\shell\secCompre" /f
-        echo É¾³ıÎÄ¼şÓÒ¼ü²Ëµ¥...
+        echo åˆ é™¤æ–‡ä»¶å³é”®èœå•...
         reg delete "HKCR\*\shell\secCompre" /f
-        echo É¾³ı7z»·¾³±äÁ¿...
-        reg delete "HKCU\Environment" /v 7Z_PATH /f
         pause
         exit
 
 ) else (
-:: Èç¹ûÊÇÓÒ¼üÎÄ¼ş»òÕßÎÄ¼ş¼ĞÔòÖ´ĞĞ´Ë²¿·Ö´úÂë
-    echo ÕıÔÚÔËĞĞ %myName%...
-    :: »ñÈ¡±»Ñ¹Ëõ¶ÔÏóµÄÂ·¾¶
+:: å¦‚æœæ˜¯å³é”®æ–‡ä»¶æˆ–è€…æ–‡ä»¶å¤¹åˆ™æ‰§è¡Œæ­¤éƒ¨åˆ†ä»£ç 
+    echo æ­£åœ¨è¿è¡Œ %myName%...
+    :: è·å–è¢«å‹ç¼©å¯¹è±¡çš„è·¯å¾„
     set comPath=%*
-    echo "µ±Ç°Ñ¹ËõµÄ¶ÔÏóÎª!comPath!"
-    ::Ê¹ÓÃ 7z.exe µÚÒ»´ÎÑ¹ËõÎÄ¼ş»òÎÄ¼ş¼Ğ
-    "!7Z_PATH!" a "!comPath!.7z.7z" "!comPath!" -p!pw1! -mx0 -y
-    :: »ñµÃÑ¹ËõÎÄ¼ş´óĞ¡
+    echo "å½“å‰å‹ç¼©çš„å¯¹è±¡ä¸º!comPath!"
+    ::ä½¿ç”¨ 7z.exe ç¬¬ä¸€æ¬¡å‹ç¼©æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹
+    "%Z_PATH%" a "!comPath!.7z.7z" "!comPath!" -p!pw1! -mx0 -y
+    :: è·å¾—å‹ç¼©æ–‡ä»¶å¤§å°
     set fileSize=0
     for %%F in ("!comPath!.7z.7z") do (
         set fileSize=%%~zF
     )
     set /a fileSize=!fileSize!/1048576
-    echo ÎÄ¼ş´óĞ¡: !fileSize! MB
-    ::Ê¹ÓÃ 7z.exe ¸ù¾İÎÄ¼ş´óĞ¡µÚ¶ş´ÎÑ¹ËõÎÄ¼ş
+    echo æ–‡ä»¶å¤§å°: !fileSize! MB
+    ::ä½¿ç”¨ 7z.exe æ ¹æ®æ–‡ä»¶å¤§å°ç¬¬äºŒæ¬¡å‹ç¼©æ–‡ä»¶
     if !fileSize! lss %minSize% (
-        echo µ±Ç°ÎÄ¼şĞ¡ÓÚ%minSize%MB£¬²»Ö´ĞĞ·Ö¾í
-        "!7Z_PATH!" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -y
+        echo å½“å‰æ–‡ä»¶å°äº%minSize%MBï¼Œä¸æ‰§è¡Œåˆ†å·
+        "%Z_PATH%" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -y
     ) else (
         if !fileSize! lss %maxSize% (
-            echo µ±Ç°ÎÄ¼ş´óÓÚ%minSize%MB£¬½«·ÖÎª2¾í
+            echo å½“å‰æ–‡ä»¶å¤§äº%minSize%MBï¼Œå°†åˆ†ä¸º2å·
             set /a result=!fileSize!/2 + 1
-            "!7Z_PATH!" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v!result!m -y
+            "%Z_PATH%" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v!result!m -y
         ) else (
-            echo µ±Ç°ÎÄ¼ş½«ÒÔ%maxSize%MB½øĞĞ·Ö¾í
-            "!7Z_PATH!" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y
+            echo å½“å‰æ–‡ä»¶å°†ä»¥%maxSize%MBè¿›è¡Œåˆ†å·
+            "%Z_PATH%" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y
         )
     )
 )
