@@ -64,7 +64,7 @@ if "%1"=="" (
             reg add "HKCR\*\shell\secCompre" /ve /d "%myName%" /f
             reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
             :: 删除之前版本的secCompre右键菜单
-            echo 删除旧secCompre注册表，删除失败可忽略
+            echo 删除旧secCompre注册表，可忽略“系统找不到指定的注册表项或值”
             reg delete "HKCR\Folder\shell\secCompre" /f
             pause
             exit /B 
