@@ -3,9 +3,9 @@
 :: 右键文件或者文件夹显示的名称，不要加空格
 set myName=二重压缩
 :: 内层密码，不要加空格
-set "pw1=pw"
+set pw1=smdxh
 :: 外层密码，不要加空格
-set "pw2=pw"
+set pw2=smdxh
 :: 设置最小分卷（MB），低于这个数值不分卷，高于这个值则分为2个压缩包。
 set minSize=200
 :: 设置最大分卷（MB），高于这个数值均以此大小分卷
@@ -61,6 +61,9 @@ if "%1"=="" (
         reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
         echo 删除旧secCompre注册表，可忽略下一条“系统找不到指定的注册表项或值”...
         reg delete "HKCR\Folder\shell\secCompre" /f
+        echo 压缩包内层密码是“%pw1%”
+        echo 压缩包外层密码是“%pw2%”
+        echo 需要修改密码请右键单击本脚本，选择“编辑”，修改对应位置等号后面的值
         pause
         exit
 
