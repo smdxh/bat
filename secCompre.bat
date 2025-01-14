@@ -7,7 +7,7 @@ set pw1=smdxh
 :: 外层密码，不要加空格
 set pw2=smdxh
 :: 设置最小分卷（MB），低于这个数值不分卷，高于这个值则分为2个压缩包。
-set minSize=200
+set minSize=100
 :: 设置最大分卷（MB），高于这个数值均以此大小分卷
 set maxSize=2000
 :: 启用延迟变量扩展
@@ -51,8 +51,8 @@ if "%1"=="" (
         echo 注入文件右键菜单...
         reg add "HKCR\*\shell\secCompre" /ve /d "%myName%" /f
         reg add "HKCR\*\shell\secCompre\command" /ve /d """"%batchPath%""" %%1 " /f
-        echo 删除旧secCompre注册表，可忽略下一条“系统找不到指定的注册表项或值”...
-        reg delete "HKCR\Folder\shell\secCompre" /f
+        echo 删除旧secCompre注册表
+        reg delete "HKCR\Folder\shell\secCompre" /f >nul 2>&1
         echo 压缩包内层密码是“%pw1%”
         echo 压缩包外层密码是“%pw2%”
         echo 需要修改密码请右键单击本脚本，选择“编辑”，修改对应位置等号后面的值
@@ -74,10 +74,10 @@ if "%1"=="" (
     set comPath=%*
     echo "当前压缩的对象为!comPath!"
     ::使用 7z.exe 第一次压缩文件或文件夹
-    "%Z_PATH%" a "!comPath!.7z.7z" "!comPath!" -p!pw1! -mx0 -y
+    "%Z_PATH%" a "!comPath!.7z" "!comPath!" -p!pw1! -mx0 -y -mhe=on
     :: 获得压缩文件大小
     set fileSize=0
-    for %%F in ("!comPath!.7z.7z") do (
+    for %%F in ("!comPath!.7z") do (
         set fileSize=%%~zF
     )
     set /a fileSize=!fileSize!/1048576
@@ -85,15 +85,15 @@ if "%1"=="" (
     ::使用 7z.exe 根据文件大小第二次压缩文件
     if !fileSize! lss %minSize% (
         echo 当前文件小于%minSize%MB，不执行分卷
-        "%Z_PATH%" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -y
+        "%Z_PATH%" a "!comPath!.upload.7z" "!comPath!.7z" -p!pw2! -mx0 -sdel -y -mhe=on
     ) else (
         if !fileSize! lss %maxSize% (
             echo 当前文件大于%minSize%MB，将分为2卷
             set /a result=!fileSize!/2 + 1
-            "%Z_PATH%" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v!result!m -y
+            "%Z_PATH%" a "!comPath!.upload" "!comPath!.7z" -p!pw2! -mx0 -sdel -v!result!m -y -mhe=on
         ) else (
             echo 当前文件将以%maxSize%MB进行分卷
-            "%Z_PATH%" a "!comPath!.7z" "!comPath!.7z.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y
+            "%Z_PATH%" a "!comPath!.upload" "!comPath!.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y -mhe=on
         )
     )
 )
