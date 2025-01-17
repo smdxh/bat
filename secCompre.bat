@@ -10,6 +10,8 @@ set pw2=smdxh
 set minSize=100
 :: 设置最大分卷（MB），高于这个数值均以此大小分卷
 set maxSize=2000
+:: 外层名称结尾，不建议.7z，可能导致不正常；为了方便内层解压出来的对象名称完整，内层已经是.7z结尾。
+set endWith=".upload"
 :: 启用延迟变量扩展
 setlocal enabledelayedexpansion
 set "Z_PATH=%~dp0\7z.exe"
@@ -85,15 +87,15 @@ if "%1"=="" (
     ::使用 7z.exe 根据文件大小第二次压缩文件
     if !fileSize! lss %minSize% (
         echo 当前文件小于%minSize%MB，不执行分卷
-        "%Z_PATH%" a "!comPath!.upload.7z" "!comPath!.7z" -p!pw2! -mx0 -sdel -y -mhe=on
+        "%Z_PATH%" a "!comPath!%endWith%.7z" "!comPath!.7z" -p!pw2! -mx0 -sdel -y -mhe=on
     ) else (
         if !fileSize! lss %maxSize% (
             echo 当前文件大于%minSize%MB，将分为2卷
             set /a result=!fileSize!/2 + 1
-            "%Z_PATH%" a "!comPath!.upload" "!comPath!.7z" -p!pw2! -mx0 -sdel -v!result!m -y -mhe=on
+            "%Z_PATH%" a "!comPath!%endWith%" "!comPath!.7z" -p!pw2! -mx0 -sdel -v!result!m -y -mhe=on
         ) else (
             echo 当前文件将以%maxSize%MB进行分卷
-            "%Z_PATH%" a "!comPath!.upload" "!comPath!.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y -mhe=on
+            "%Z_PATH%" a "!comPath!%endWith%" "!comPath!.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y -mhe=on
         )
     )
 )
