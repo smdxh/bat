@@ -26,15 +26,7 @@ if "%1"=="" (
     set "batchDir=%~dp0"
     echo 检查是否以管理员身份运行...
     net.exe session 1>NUL 2>NUL && (
-        goto as_admin
-    ) || (
-        goto not_admin
-    )
-    :not_admin
-        echo 请求管理员权限...
-        powershell -Command "Start-Process '%~f0' -Verb runAs"
-        exit /b
-    :as_admin
+        :: 管理员权限执行成功
         :menu
         echo 请选择操作：
         echo 1. 安装"%myName%"
@@ -44,6 +36,12 @@ if "%1"=="" (
         if "%choice%"=="2" goto uninstall
         echo 输入无效，请重新输入。
         goto menu
+    ) || (
+        :: 管理员权限执行失败
+        echo 请求管理员权限...
+        powershell -Command "Start-Process '%~f0' -Verb runAs"
+        exit /b
+    )
 
     :install
         echo 进入安装程序
