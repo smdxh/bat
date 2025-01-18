@@ -8,7 +8,7 @@ set pw1=smdxh
 set pw2=smdxh
 :: 外层压缩包名称结尾文字。比如压缩文件夹名字是“申鹤”，内层压缩包名字则是“申鹤.7z”，外层压缩包名字是“申鹤港.7z”，用户解压时选中2次“解压到当前文件夹”会得到与上传者文件夹同名的文件夹。
 :: 注意：外层压缩包名结尾不可设为“.7z”，这会与内层压缩包名相同，导致压缩不正常。压缩包名不带“.”的情况下，7-zip软件会自动加“.7z”
-set endWith="港"
+set endWith=".upload"
 :: 设置最小分卷（MB），低于这个数值不分卷，高于这个值则分为2个压缩包。
 set minSize=100
 :: 设置最大分卷（MB），高于这个数值均以此大小分卷
@@ -32,10 +32,8 @@ if "%1"=="" (
     )
     :not_admin
         echo 请求管理员权限...
-        echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs" 
-        echo UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs" 
-        "%temp%\getadmin.vbs" 
-        exit /B 
+        powershell -Command "Start-Process '%~f0' -Verb runAs"
+        exit /b
     :as_admin
         :menu
         echo 请选择操作：
@@ -75,10 +73,12 @@ if "%1"=="" (
 :: 如果是右键文件或者文件夹则执行此部分代码
     echo 正在运行 %myName%...
     :: 获取被压缩对象的路径
-    set comPath=%*
-    echo "当前压缩的对象为!comPath!"
+    set fullPath=%*
+    echo "当前压缩的对象为!fullPath!"
+    :: 获取不带后缀的完整路径。
+    for %%I in ("!fullPath!") do set comPath=%%~dpnI
     ::使用 7z.exe 第一次压缩文件或文件夹
-    "%Z_PATH%" a "!comPath!.7z" "!comPath!" -p!pw1! -mx0 -y -mhe=on
+    "%Z_PATH%" a "!comPath!.7z" "!fullPath!" -p!pw1! -mx0 -y -mhe=on
     :: 获得压缩文件大小
     set fileSize=0
     for %%F in ("!comPath!.7z") do (
