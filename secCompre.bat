@@ -71,7 +71,7 @@ if "%1"=="" (
 :: 如果是右键文件或者文件夹则执行此部分代码
     echo 正在运行 %myName%...
     :: 获取被压缩对象的路径
-    set fullPath=%*
+    set "fullPath=%*"
     echo "当前压缩的对象为!fullPath!"
     :: 获取不带后缀的完整路径。
     for %%I in ("!fullPath!") do set comPath=%%~dpnI
@@ -98,4 +98,5 @@ if "%1"=="" (
             "%Z_PATH%" a "!comPath!%endWith%" "!comPath!.7z" -p!pw2! -mx0 -sdel -v%maxSize%m -y -mhe=on
         )
     )
+    pause
 )
